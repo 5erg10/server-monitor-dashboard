@@ -2,9 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
-const CLIENT_URL = process.env.NODE_ENV === 'production'
-  ? 'https://monitor.5erg10.com'
-  : (process.env.CLIENT_URL || 'http://localhost:5173');
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 // Initiate Google OAuth
 router.get('/google', passport.authenticate('google', {
@@ -21,7 +19,7 @@ router.get('/google/callback',
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.CLIENT_URL?.startsWith('https'),
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });

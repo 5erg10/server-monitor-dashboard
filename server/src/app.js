@@ -25,9 +25,7 @@ app.use(helmet({ contentSecurityPolicy: false }));
 
 // CORS
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? `https://monitor.5erg10.com`
-    : process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true,
 }));
 
@@ -49,7 +47,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.CLIENT_URL?.startsWith('https'),
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   },
