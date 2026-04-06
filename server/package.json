@@ -1,0 +1,30 @@
+{
+  "name": "@server-dashboard/server",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "ws": "^8.16.0",
+    "better-sqlite3": "^9.4.3",
+    "systeminformation": "^5.22.6",
+    "dockerode": "^4.0.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "express-session": "^1.18.0",
+    "cookie-parser": "^1.4.6",
+    "express-rate-limit": "^7.2.0",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}

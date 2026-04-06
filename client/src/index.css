@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    @apply bg-surface text-white h-full;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  * { @apply border-surface-border; }
+}
+
+@layer utilities {
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+}
