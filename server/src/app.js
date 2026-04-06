@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
+const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 
 require('./auth/passport'); // init passport strategies
@@ -73,9 +74,9 @@ app.use('/api/alerts', requireAuth, alertsRoutes);
 // Health check (public)
 app.get('/api/health', (req, res) => res.json({ status: 'ok', ts: Date.now() }));
 
-// Serve React static build in production
-if (process.env.NODE_ENV === 'production') {
-  const publicPath = path.join(__dirname, '../../public');
+// Serve React static build if the public directory exists (production/Docker)
+const publicPath = path.join(__dirname, '../../public');
+if (fs.existsSync(path.join(publicPath, 'index.html'))) {
   app.use(express.static(publicPath));
   app.get('*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'));
