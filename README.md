@@ -1,4 +1,4 @@
-# Server Monitor Dashboard
+# Server Monitor Dashboard - 
 
 Dashboard web en tiempo real para monitorizar el estado de un servidor Linux: CPU, memoria, disco, red, contenedores Docker, logs del sistema y alertas configurables. Autenticación protegida por Google OAuth2 con lista blanca de emails.
 
