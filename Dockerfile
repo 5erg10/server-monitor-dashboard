@@ -12,6 +12,8 @@ RUN npm run build --workspace=client
 FROM node:20-alpine AS production
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 # Install dependencies for native modules (better-sqlite3)
 RUN apk add --no-cache python3 make g++
 
