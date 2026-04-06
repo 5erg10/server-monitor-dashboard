@@ -20,6 +20,9 @@ const { requireAuth } = require('./middleware/requireAuth');
 
 const app = express();
 
+// Trust the first proxy (Nginx Proxy Manager)
+app.set('trust proxy', 1);
+
 // Security
 app.use(helmet({ contentSecurityPolicy: false }));
 
