@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useMetrics } from '../hooks/useMetrics';
 import { clsx } from 'clsx';
-import { RefreshCw, Play, Square, Terminal, Rocket } from 'lucide-react';
+import { RefreshCw, Play, Square, Terminal, Rocket, List } from 'lucide-react';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -100,16 +100,17 @@ export default function LogsPage() {
   const { latest } = useMetrics();
   const containers = latest?.docker?.filter(c => c.status === 'running') ?? [];
 
-  const [selected, setSelected]       = useState(null);
-  const [tab, setTab]                 = useState('activity'); // 'activity' | 'deploy'
+  const [selected, setSelected]         = useState(null);
+  const [tab, setTab]                   = useState('activity'); // 'activity' | 'deploy'
   const [hasDeployLog, setHasDeployLog] = useState(false);
+  const [containerPanelOpen, setContainerPanelOpen] = useState(false);
 
   // Activity state
-  const [activityLogs, setActivityLogs] = useState([]);
+  const [activityLogs, setActivityLogs]     = useState([]);
   const [activityLoading, setActivityLoading] = useState(false);
-  const [activityError, setActivityError]     = useState(null);
-  const [tail, setTail]       = useState(200);
-  const [following, setFollowing] = useState(false);
+  const [activityError, setActivityError]   = useState(null);
+  const [tail, setTail]                     = useState(200);
+  const [following, setFollowing]           = useState(false);
   const intervalRef = useRef(null);
 
   // Deploy state
@@ -164,6 +165,7 @@ export default function LogsPage() {
     setDeployContent(null);
     setFollowing(false);
     setHasDeployLog(false);
+    setContainerPanelOpen(false); // close panel on mobile after selecting
 
     // Check if deploy log exists
     try {
@@ -200,8 +202,8 @@ export default function LogsPage() {
 
   // Auto-scroll
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [activityLogs]);
+    if (tab === 'activity') bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [activityLogs, tab]);
 
   // Auto-select first container
   useEffect(() => {
@@ -217,10 +219,16 @@ export default function LogsPage() {
   const isDeploy   = tab === 'deploy';
 
   return (
-    <div className="flex h-[calc(100vh-57px)] overflow-hidden">
+    // Mobile: subtract top bar height (h-14 = 56px); desktop: full viewport height
+    <div className="flex h-[calc(100vh-56px)] lg:h-screen overflow-hidden">
 
-      {/* ── Sidebar ── */}
-      <aside className="w-56 flex-shrink-0 border-r border-surface-border flex flex-col">
+      {/* ── Container sidebar ── */}
+      <aside className={clsx(
+        'flex-col flex-shrink-0 border-r border-surface-border',
+        // Desktop: always visible
+        // Mobile: toggleable (hidden by default)
+        containerPanelOpen ? 'flex w-56' : 'hidden lg:flex lg:w-56',
+      )}>
         <div className="px-3 py-3 border-b border-surface-border">
           <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest">
             Running containers
@@ -246,6 +254,20 @@ export default function LogsPage() {
 
         {/* Tabs + controls */}
         <div className="flex items-center border-b border-surface-border flex-shrink-0 px-2">
+
+          {/* Mobile: toggle container list */}
+          <button
+            onClick={() => setContainerPanelOpen(v => !v)}
+            className={clsx(
+              'lg:hidden p-1.5 mr-1 rounded-lg text-xs font-mono transition-colors',
+              containerPanelOpen
+                ? 'bg-white/10 text-white'
+                : 'text-white/40 hover:text-white hover:bg-white/5',
+            )}
+            title="Containers"
+          >
+            <List size={13} />
+          </button>
 
           {/* Tab buttons */}
           <div className="flex items-center gap-1 py-2">
